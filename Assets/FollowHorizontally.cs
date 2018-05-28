@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HeroFollow : MonoBehaviour {
+public class FollowHorizontally : MonoBehaviour {
 
 	public HeroRabit rabit;
 
@@ -14,11 +14,10 @@ public class HeroFollow : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		Transform rabit_tr = rabit.transform;
-		Transform camera_tr = this.transform;
+		Transform tr = this.transform;
 		Vector3 rabit_vec = rabit_tr.position;
-		Vector3 camera_vec = camera_tr.position;
-		camera_vec.x = rabit_vec.x;
-		camera_vec.y = rabit_vec.y;
-		transform.position = camera_vec;
+		Vector3 vec = tr.position;
+		vec.x = rabit_vec.x;
+		this.transform.position = vec;
 	}
 }
