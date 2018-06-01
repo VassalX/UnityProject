@@ -11,10 +11,13 @@ public class HeroRabit : MonoBehaviour {
 	public float MaxJumpTime = 2f;
 	public float JumpSpeed = 2f;
 	Rigidbody2D myBody = null;
+	Transform heroParent = null;
+
 	// Use this for initialization
 	void Start () {
 		myBody = this.GetComponent<Rigidbody2D> ();
 		LevelController.current.setStartPosition (transform.position);
+		heroParent = this.transform.parent;
 	}
 	
 	// Update is called once per frame
@@ -70,9 +73,17 @@ public class HeroRabit : MonoBehaviour {
 		RaycastHit2D hit = Physics2D.Linecast (from, to, layer_id);
 
 		if (hit) {
+			//Перевіряємо чи ми опинились на платформі
+			if(hit.transform != null
+				&& hit.transform.GetComponent<MovingPlatform>() != null){
+				//Приліпаємо до платформи
+				Utility.SetNewParent(this.transform, hit.transform);
+			}
 			isGrounded = true;
 		} else {
 			isGrounded = false;
+			//Ми в повітрі відліпаємо під платформи
+			Utility.SetNewParent(this.transform, this.heroParent);
 		}
 
 		Debug.DrawLine (from, to, Color.red);

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class LevelController : MonoBehaviour {
 	int livesCount = 3;
+	int coinsCount = 0;
 	Vector3 startPosition;
 
 	public static LevelController current;
@@ -17,11 +18,15 @@ public class LevelController : MonoBehaviour {
 	}
 
 	public int getLivesCount (){
-		return livesCount;
+		return this.livesCount;
+	}
+
+	public void addCoins(int number){
+		this.coinsCount += number;
 	}
 
 	public void onRabitDeath(HeroRabit rabit){
 		rabit.transform.position = this.startPosition;
-		livesCount--;
+		this.livesCount--;
 	}
 }
