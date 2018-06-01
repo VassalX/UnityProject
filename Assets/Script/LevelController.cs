@@ -26,7 +26,7 @@ public class LevelController : MonoBehaviour {
 	}
 
 	public void onRabitDeath(HeroRabit rabit){
-		rabit.transform.position = this.startPosition;
+        rabit.isDead = true;
 		this.livesCount--;
 	}
 }

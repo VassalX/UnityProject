@@ -6,10 +6,13 @@ public class HeroRabit : MonoBehaviour {
 
 	public float speed = 1;
 	public bool isGrounded = false;
-	bool JumpActive = false;
-	float JumpTime = 0f;
+    public bool isDead = false;
+    public float respawnDelay = 2;
 	public float MaxJumpTime = 2f;
 	public float JumpSpeed = 2f;
+    float spawnIn = 0;
+    bool JumpActive = false;
+    float JumpTime = 0f;
 	Rigidbody2D myBody = null;
 	Transform heroParent = null;
 
@@ -18,6 +21,7 @@ public class HeroRabit : MonoBehaviour {
 		myBody = this.GetComponent<Rigidbody2D> ();
 		LevelController.current.setStartPosition (transform.position);
 		heroParent = this.transform.parent;
+        spawnIn = respawnDelay;
 	}
 	
 	// Update is called once per frame
