@@ -5,6 +5,8 @@ using UnityEngine;
 public class LevelController : MonoBehaviour {
 	int livesCount = 3;
 	int coinsCount = 0;
+	int fruitsCount = 0;
+	int crystalsCount = 0;
 	Vector3 startPosition;
 
 	public static LevelController current;
@@ -25,8 +27,18 @@ public class LevelController : MonoBehaviour {
 		this.coinsCount += number;
 	}
 
+	public void addFruits(int number){
+		this.fruitsCount += number;
+	}
+
+	public void addCrystals(int number){
+		this.crystalsCount += number;
+	}
+
 	public void onRabitDeath(HeroRabit rabit){
-        rabit.isDead = true;
 		this.livesCount--;
+		rabit.normalizeScale ();
+		rabit.transform.position = this.startPosition;
+		rabit.isDead = false;
 	}
 }

@@ -4,71 +4,84 @@ using UnityEngine;
 
 public class HeroRabit : MonoBehaviour {
 
-	public float speed = 1;
+	public float speed = 1f;
 	public bool isGrounded = false;
     public bool isDead = false;
-    public float respawnDelay = 2;
+	public bool isBig = false;
+	public bool isDamaged = false;
+	public float damageTime = 4f;
 	public float MaxJumpTime = 2f;
 	public float JumpSpeed = 2f;
-    float spawnIn = 0;
+	public float bigScale = 0.5f;
+    
     bool JumpActive = false;
     float JumpTime = 0f;
 	Rigidbody2D myBody = null;
 	Transform heroParent = null;
+	Vector3 normScale = new Vector3(1f,1f,0);
+	Color normColor = Color.white;
+
+	Animator animator = null;
+	SpriteRenderer sr = null;
 
 	// Use this for initialization
 	void Start () {
 		myBody = this.GetComponent<Rigidbody2D> ();
 		LevelController.current.setStartPosition (transform.position);
 		heroParent = this.transform.parent;
-        spawnIn = respawnDelay;
+		normScale = this.transform.localScale;
+		animator = GetComponent<Animator> ();
+		sr = GetComponent<SpriteRenderer> ();
+		normColor = sr.color;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		float value = Input.GetAxis ("Horizontal");
-		Animator animator = GetComponent<Animator> ();
-		if (Mathf.Abs (value) > 0) {
-			animator.SetBool ("run", true);
-		} else {
-			animator.SetBool ("run", false);
-		}
-		if (this.isGrounded) {
-			animator.SetBool ("jump", false);
-		} else {
-			animator.SetBool ("jump", true);
+		if (!isDead) {
+			float value = Input.GetAxis ("Horizontal");
+			if (Mathf.Abs (value) > 0) {
+				animator.SetBool ("run", true);
+			} else {
+				animator.SetBool ("run", false);
+			}
+			if (this.isGrounded) {
+				animator.SetBool ("jump", false);
+			} else {
+				animator.SetBool ("jump", true);
+			}
 		}
 	}
 
 	// Update is called once per frame
 	void FixedUpdate() {
-		float value = Input.GetAxis ("Horizontal");
-		if (Mathf.Abs (value) > 0) {
-			Vector2 vel = myBody.velocity;
-			vel.x = value * speed;
-			myBody.velocity = vel;
-		}
-		if (Input.GetButton ("Jump") && isGrounded) {
-			this.JumpActive = true;
-		}
-		if (this.JumpActive) {
-			if (Input.GetButton ("Jump")) {
-				this.JumpTime += Time.deltaTime;
-				if (this.JumpTime < this.MaxJumpTime) {
-					Vector2 vel = myBody.velocity;
-					vel.y = JumpSpeed * (1.0f - JumpTime / MaxJumpTime);
-					myBody.velocity = vel;
-				}
-			} else {
-				this.JumpActive = false;
-				this.JumpTime = 0;
+		if (!isDead) {
+			float value = Input.GetAxis ("Horizontal");
+			if (Mathf.Abs (value) > 0) {
+				Vector2 vel = myBody.velocity;
+				vel.x = value * speed;
+				myBody.velocity = vel;
 			}
-		}
-		SpriteRenderer sr = GetComponent<SpriteRenderer> ();
-		if (value < 0) {
-			sr.flipX = true;
-		} else if (value > 0) {
-			sr.flipX = false;
+			if (Input.GetButton ("Jump") && isGrounded) {
+				this.JumpActive = true;
+			}
+			if (this.JumpActive) {
+				if (Input.GetButton ("Jump")) {
+					this.JumpTime += Time.deltaTime;
+					if (this.JumpTime < this.MaxJumpTime) {
+						Vector2 vel = myBody.velocity;
+						vel.y = JumpSpeed * (1.0f - JumpTime / MaxJumpTime);
+						myBody.velocity = vel;
+					}
+				} else {
+					this.JumpActive = false;
+					this.JumpTime = 0;
+				}
+			}
+			if (value < 0) {
+				sr.flipX = true;
+			} else if (value > 0) {
+				sr.flipX = false;
+			}
 		}
 		Vector3 from = transform.position + Vector3.up * 0.3f;
 		Vector3 to = transform.position + Vector3.down * 0.1f;
@@ -91,5 +104,45 @@ public class HeroRabit : MonoBehaviour {
 		}
 
 		Debug.DrawLine (from, to, Color.red);
+	}
+
+	public void makeBigger(){
+		if (!isBig) {
+			this.transform.localScale += new Vector3 (bigScale, bigScale, 0);
+			isBig = true;
+		}
+	}
+
+	public void makeSmaller(){
+		if (isBig) {
+			sr.color = Color.red;
+			isDamaged = true;
+			normalizeScale ();
+			Invoke ("removeDamaged", damageTime);
+		} else if(!isDead){
+			die ();
+		}
+	}
+
+	void removeDamaged(){
+		isDamaged = false;
+		sr.color = normColor;
+	}
+
+	public void normalizeScale(){
+		this.transform.localScale = normScale;
+		isBig = false;
+	}
+
+	public void die (){
+		isDead = true;
+		Vector2 vel = myBody.velocity;
+		vel.x /= 2;
+		myBody.velocity = vel;
+		animator.SetTrigger ("dead");
+	}
+
+	public void respawn(){
+		LevelController.current.onRabitDeath (this);
 	}
 }
