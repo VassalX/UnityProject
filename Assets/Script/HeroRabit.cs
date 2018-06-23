@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class HeroRabit : MonoBehaviour {
 
+	public static HeroRabit lastRabit = null;
+
 	public float speed = 1f;
 	public bool isGrounded = false;
     public bool isDead = false;
@@ -23,6 +25,10 @@ public class HeroRabit : MonoBehaviour {
 
 	Animator animator = null;
 	SpriteRenderer sr = null;
+
+	void Awake(){
+		lastRabit = this;
+	}
 
 	// Use this for initialization
 	void Start () {
@@ -144,5 +150,28 @@ public class HeroRabit : MonoBehaviour {
 
 	public void respawn(){
 		LevelController.current.onRabitDeath (this);
+	}
+
+	public void Jump() 
+	{
+		StartCoroutine(JumpCoroutine());
+	}
+
+	private IEnumerator JumpCoroutine()
+	{
+		float jumpTime = 0;
+		while (true)
+		{
+			jumpTime += Time.deltaTime;
+			if (jumpTime < 1f)
+			{
+				myBody.velocity = new Vector2(myBody.velocity.x, JumpSpeed * (1.0f - jumpTime / 1f));
+				yield return null;
+			} else {
+				isGrounded = true;
+				jumpTime = 0;
+				break;
+			}
+		}
 	}
 }
