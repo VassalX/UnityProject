@@ -29,6 +29,7 @@ public class Orc2Enemy : Orc1Enemy
 			changeVelocity (0);
 			if (Mathf.Abs (rabit_pos.x - my_pos.x) < radius
 			    && Time.time - last_carrot > shoot_time) {
+				attackSource.Play ();
 				this.myController.SetTrigger ("attack2");
 				this.launchCarrot (sr.flipX ? 1 : -1);
 			}

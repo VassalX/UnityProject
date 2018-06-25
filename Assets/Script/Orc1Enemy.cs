@@ -14,6 +14,8 @@ public class Orc1Enemy : MonoBehaviour {
 	public Vector3 pointA;
 	public Vector3 pointB;
 	public float speed;
+	public AudioClip attackSound;
+	public AudioClip dieSound;
 
 	protected Vector3 my_pos;
 	protected Vector3 rabit_pos;
@@ -25,6 +27,9 @@ public class Orc1Enemy : MonoBehaviour {
 
 	protected Animator animator = null;
 	protected SpriteRenderer sr = null;
+
+	protected AudioSource attackSource = null;
+	protected AudioSource dieSource = null;
 
 	void Awake(){
 		
@@ -40,6 +45,10 @@ public class Orc1Enemy : MonoBehaviour {
 		animator = GetComponent<Animator> ();
 		sr = GetComponent<SpriteRenderer> ();
 		Physics2D.IgnoreLayerCollision (11, 11);
+		attackSource = gameObject.AddComponent<AudioSource> ();
+		attackSource.clip = attackSound;
+		dieSource = gameObject.AddComponent<AudioSource> ();
+		dieSource.clip = dieSound;
 	}
 	
 	// Update is called once per frame
@@ -151,6 +160,7 @@ public class Orc1Enemy : MonoBehaviour {
 		} else {
 			//Debug.Log ("kill rabit");
 			animator.SetTrigger("attack");
+			attackSource.Play ();
 			if(!rabit.isDamaged)
 				rabit.makeSmaller ();
 		}
@@ -158,6 +168,7 @@ public class Orc1Enemy : MonoBehaviour {
 
 	protected IEnumerator DieCoroutine()
 	{
+		dieSource.Play ();
 		mode = Mode.Dead;
 		changeVelocity (myBody.velocity.x / 4);
 		animator.SetTrigger("death");

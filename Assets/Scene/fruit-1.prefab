@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 114355384663226872}
   m_Layer: 9
   m_Name: fruit-1
-  m_TagString: Untagged
+  m_TagString: Fruit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -36,7 +36,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1582273505022094}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.02, y: 2.64, z: 0}
+  m_LocalPosition: {x: 2.19, y: 2.49, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -78,6 +78,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f90cc47c498ab844a22c016c9016f90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collectSound: {fileID: 8300000, guid: cd46aa2d6e78249dd8df3f3b948d168a, type: 3}
 --- !u!212 &212635533848545782
 SpriteRenderer:
   m_ObjectHideFlags: 1

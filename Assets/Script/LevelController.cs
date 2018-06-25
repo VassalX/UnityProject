@@ -17,6 +17,9 @@ public class LevelController : MonoBehaviour {
 	public Image redGemImage;
 	public Image greenGemImage;
 	public Image blueGemImage;
+	public Image heart1Image;
+	public Image heart2Image;
+	public Image heart3Image;
 
 	public static LevelController current;
 
@@ -68,6 +71,17 @@ public class LevelController : MonoBehaviour {
 	}
 
 	public void onRabitDeath(HeroRabit rabit){
+		switch (livesCount) {
+		case 3:
+			heart3Image.canvasRenderer.SetAlpha (0f);
+			break;
+		case 2:
+			heart2Image.canvasRenderer.SetAlpha (0f);
+			break;
+		case 1:
+			heart1Image.canvasRenderer.SetAlpha (0f);
+			break;
+		}
 		this.livesCount--;
 		rabit.normalizeScale ();
 		rabit.transform.position = this.startPosition;
